@@ -4,13 +4,6 @@ This repository contains the implementation, numerical experiments, and final re
 
 The project focuses on the power method, the effect of the damping factor, sparse and matrix-free computation, and an application to the **HEP-TH scientific citation network**.
 
-## Key Results
-
-- Implemented a sparse, matrix-free PageRank method with **O(m + n)** work and memory per iteration.
-- Achieved a **39.1× speedup** over the dense formulation on a 5,000-node synthetic graph.
-- Applied PageRank to the HEP-TH citation network containing **27,769 papers and 352,768 citation links**.
-- Compared PageRank rankings with citation-count rankings and analyzed the effect of the damping factor on convergence.
-
 ## Project Structure
 
 ```text
@@ -20,6 +13,7 @@ numerical-analysis-pagerank/
 ├── notebooks/
 │   └── pagerank_analysis.ipynb
 ├── data/
+├── assets/
 └── report/
     └── report.pdf
 ```
@@ -28,6 +22,7 @@ numerical-analysis-pagerank/
 - `data/`: HEP-TH citation-network data and metadata.
 - `report/`: final project report.
 - `requirements.txt`: Python dependencies required to run the notebook.
+- `assets/`: figures and visualizations used in the documentation.
 
 ## Numerical Method
 
@@ -35,10 +30,10 @@ PageRank is formulated as the stationary distribution of the Google matrix and c
 
 Instead of explicitly constructing the dense Google matrix, the implementation exploits the sparsity of the hyperlink matrix and handles the dangling-node and teleportation corrections in a matrix-free way.
 
-For a graph with `n` nodes and `m` edges, each iteration requires:
+For a graph with `n` nodes and `m` edges, the implementation requires:
 
-- **O(m + n)** computational work;
-- **O(m + n)** memory.
+- **O(m + n)** computational work per iteration;
+- **O(m + n)** total memory.
 
 This makes the implementation suitable for substantially larger graphs than the corresponding dense formulation.
 
@@ -64,6 +59,8 @@ To study computational performance, dense and sparse implementations were compar
 On a graph with **5,000 nodes and approximately 50,000 edges**, the sparse implementation achieved a **39.1× speedup** over the dense formulation.
 
 ![Sparse PageRank speedup](assets/sparse_speedup.png)
+
+*Speedup of the sparse matrix-free implementation relative to the dense formulation.*
 
 The algorithm was then applied to the HEP-TH citation network to compare PageRank with standard citation-count rankings.
 
