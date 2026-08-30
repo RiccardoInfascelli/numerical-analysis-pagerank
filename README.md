@@ -1,79 +1,102 @@
 # Numerical Analysis of PageRank
 
-Project developed for the **Numerical Analysis for Machine Learning** course at Politecnico di Milano.
+This repository contains the implementation, numerical experiments, and final report for a project on the numerical analysis of the **PageRank algorithm**.
 
-The project studies the PageRank algorithm from a numerical perspective. PageRank is implemented in Python, tested on directed graphs of different sizes, and applied to the HEP-TH scientific citation network.
+The project focuses on the power method, the effect of the damping factor, sparse and matrix-free computation, and an application to the **HEP-TH scientific citation network**.
 
-## Contents
+## Key Results
 
-The project includes:
+- Implemented a sparse, matrix-free PageRank method with **O(m + n)** work and memory per iteration.
+- Achieved a **39.1× speedup** over the dense formulation on a 5,000-node synthetic graph.
+- Applied PageRank to the HEP-TH citation network containing **27,769 papers and 352,768 citation links**.
+- Compared PageRank rankings with citation-count rankings and analyzed the effect of the damping factor on convergence.
 
-- basic and sparse PageRank implementations;
-- treatment of dangling nodes and teleportation;
-- power iteration and convergence analysis;
-- study of the damping factor;
-- comparison with an eigensolver;
-- comparison with the equivalent linear-system formulation;
-- performance comparison between dense and sparse implementations;
-- application to the HEP-TH citation network;
-- comparison between PageRank and citation count;
-- analysis of publication year;
-- identification of candidate scientific gems.
-
-## Project structure
+## Project Structure
 
 ```text
-NAML-PageRank/
+numerical-analysis-pagerank/
 ├── README.md
 ├── requirements.txt
 ├── notebooks/
-│   └ pagerank_analysis.ipynb
-├── src/
+│   └── pagerank_analysis.ipynb
 ├── data/
 └── report/
     └── report.pdf
 ```
 
 - `notebooks/`: Jupyter notebook containing the implementation and numerical experiments.
-- `src/`: reusable Python functions, if separated from the notebook.
 - `data/`: HEP-TH citation-network data and metadata.
 - `report/`: final project report.
 - `requirements.txt`: Python dependencies required to run the notebook.
 
-## Installation
+## Numerical Method
 
-Clone the repository and enter the project directory:
+PageRank is formulated as the stationary distribution of the Google matrix and computed using the **power method**.
+
+Instead of explicitly constructing the dense Google matrix, the implementation exploits the sparsity of the hyperlink matrix and handles the dangling-node and teleportation corrections in a matrix-free way.
+
+For a graph with `n` nodes and `m` edges, each iteration requires:
+
+- **O(m + n)** computational work;
+- **O(m + n)** memory.
+
+This makes the implementation suitable for substantially larger graphs than the corresponding dense formulation.
+
+## Dataset
+
+The experiments use the **High Energy Physics Theory (HEP-TH) citation network** distributed by the Stanford Network Analysis Project (SNAP).
+
+In the directed graph, an edge from paper `i` to paper `j` indicates that paper `i` cites paper `j`.
+
+After preprocessing the dataset by removing duplicate edges and self-citations, the network used in the experiments contains:
+
+- **27,769 papers**
+- **352,768 directed citation links**
+
+## Numerical Results
+
+The implementation was first validated on a small directed graph by comparing the power iteration with independent numerical formulations.
+
+The sparse matrix-free implementation produced PageRank vectors equivalent to the dense formulation up to floating-point precision.
+
+To study computational performance, dense and sparse implementations were compared on synthetic directed graphs of increasing size.
+
+On a graph with **5,000 nodes and approximately 50,000 edges**, the sparse implementation achieved a **39.1× speedup** over the dense formulation.
+
+![Sparse PageRank speedup](assets/sparse_speedup.png)
+
+The algorithm was then applied to the HEP-TH citation network to compare PageRank with standard citation-count rankings.
+
+For a damping factor of `0.50`, PageRank converged in **20 iterations**, with a final residual of approximately `5.59e-9`.
+
+The Spearman correlation between PageRank and citation count was approximately **0.868**, showing that the two rankings are strongly related but capture different aspects of paper importance.
+
+## Running the Project
+
+Clone the repository:
 
 ```bash
-git clone git@github.com:YOUR-USERNAME/NAML-PageRank.git
-cd NAML-PageRank
+git clone https://github.com/RiccardoInfascelli/numerical-analysis-pagerank.git
+cd numerical-analysis-pagerank
 ```
 
-Create a Python virtual environment:
+Create and activate a virtual environment:
 
 ```bash
-python3 -m venv .venv
-```
-
-Activate the environment on macOS or Linux:
-
-```bash
+python -m venv .venv
 source .venv/bin/activate
 ```
 
-Install the required packages:
+On Windows:
 
 ```bash
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
+.venv\Scripts\activate
 ```
 
-## Running the notebook
-
-Open the project in Visual Studio Code or start Jupyter Notebook:
+Install the dependencies:
 
 ```bash
-jupyter notebook
+pip install -r requirements.txt
 ```
 
 Then open:
@@ -82,44 +105,27 @@ Then open:
 notebooks/pagerank_analysis.ipynb
 ```
 
-When using Visual Studio Code, select `.venv` as the Python kernel.
-
-## Dataset
-
-The experiments use the **High Energy Physics Theory citation network** distributed by the Stanford Network Analysis Project.
-
-In the directed citation graph, an edge from paper \(i\) to paper \(j\) means that paper \(i\) cites paper \(j\).
-
-After removing duplicate edges and self-citations, the network used in the experiments contains:
-
-- 27,769 papers;
-- 352,768 directed citation links.
-
-## Main numerical results
-
-The PageRank implementation was first validated on a six-page directed graph. With damping factor \(\alpha=0.85\) and tolerance \(10^{-8}\), the power iteration converged in 33 iterations.
-
-The sparse matrix-free implementation produced results equivalent to the dense formulation up to floating-point precision, while becoming significantly faster as the graph size increased.
-
-On the HEP-TH citation network, using \(\alpha=0.50\):
-
-- PageRank converged in 20 iterations;
-- the final residual was approximately \(5.59 \times 10^{-9}\);
-- the Spearman correlation between PageRank and citation count was approximately \(0.868\);
-- 13 candidate scientific gems were identified;
-- publication year and PageRank showed a moderate negative association.
+using Jupyter Notebook, JupyterLab, or Visual Studio Code.
 
 ## Report
 
-The final report is available in:
+The complete project report is available at:
 
 ```text
 report/report.pdf
 ```
 
-It contains the mathematical formulation, numerical methods, implementation details, experiments, discussion, and conclusions.
+It contains the mathematical formulation of PageRank, the sparse and matrix-free implementation, convergence analysis, numerical experiments, performance benchmarks, and the application to the HEP-TH citation network.
+
+## Technologies
+
+- Python
+- NumPy
+- SciPy
+- Jupyter
 
 ## Author
 
-Riccardo Infascelli
-
+**Riccardo Infascelli**  
+M.Sc. High Performance Computing Engineering  
+Politecnico di Milano
