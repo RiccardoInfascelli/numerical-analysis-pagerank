@@ -56,7 +56,7 @@ The sparse matrix-free implementation produced PageRank vectors equivalent to th
 
 To study computational performance, dense and sparse implementations were compared on synthetic directed graphs of increasing size.
 
-On a graph with **5,000 nodes and approximately 50,000 edges**, the sparse implementation achieved a **39.1× speedup** over the dense formulation.
+The results show that the sparse matrix-free formulation becomes increasingly advantageous as the graph size grows, because it avoids constructing and multiplying the dense Google matrix.
 
 ![Sparse PageRank speedup](assets/sparse_speedup.png)
 
@@ -67,6 +67,12 @@ The algorithm was then applied to the HEP-TH citation network to compare PageRan
 For a damping factor of `0.50`, PageRank converged in **20 iterations**, with a final residual of approximately `5.59e-9`.
 
 The Spearman correlation between PageRank and citation count was approximately **0.868**, showing that the two rankings are strongly related but capture different aspects of paper importance.
+
+The notebook also includes a dynamic PageRank update experiment. Starting from an existing directed graph, new nodes and links are added, and different initialization strategies are compared for recomputing PageRank on the updated graph.
+
+The experiment compares cold start, warm start, and aggregation-assisted refinement. The warm start reuses the PageRank vector computed on the old graph, while the aggregation-based strategy first builds a reduced problem and then uses its solution to initialize a refinement step on the full updated graph.
+
+This part of the project illustrates how previous computations and graph structure can be exploited to reduce the cost of PageRank updates, without changing the final PageRank model.
 
 ## Running the Project
 
@@ -112,7 +118,7 @@ The complete project report is available at:
 report/report.pdf
 ```
 
-It contains the mathematical formulation of PageRank, the sparse and matrix-free implementation, convergence analysis, numerical experiments, performance benchmarks, and the application to the HEP-TH citation network.
+It contains the mathematical formulation of PageRank, the sparse and matrix-free implementation, convergence analysis, numerical experiments, performance benchmarks, the application to the HEP-TH citation network, and the dynamic PageRank update experiment.
 
 ## Technologies
 
